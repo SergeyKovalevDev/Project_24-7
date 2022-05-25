@@ -2,72 +2,141 @@ package ru.sf.models;
 
 import ru.sf.enums.StudyProfile;
 
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class University {
     private String id;
     private String fullName;
     private String shortName;
     private int yearOfFoundation;
     private StudyProfile mainProfile;
+    private URL website;
 
-    public University() {
-    }
-
-    public University(String id, String fullName, String shortName, int yearOfFoundation, StudyProfile mainProfile) {
-        this.id = id;
-        this.fullName = fullName;
-        this.shortName = shortName;
-        this.yearOfFoundation = yearOfFoundation;
-        this.mainProfile = mainProfile;
+    private University(Builder builder) {
+        setId(builder.id);
+        setFullName(builder.fullName);
+        setShortName(builder.shortName);
+        setYearOfFoundation(builder.yearOfFoundation);
+        setMainProfile(builder.mainProfile);
+        setWebsite(builder.website);
     }
 
     public String getId() {
         return id;
     }
 
-    public University setId(String id) {
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public University setFullName(String fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
-        return this;
     }
 
     public String getShortName() {
         return shortName;
     }
 
-    public University setShortName(String shortName) {
+    public void setShortName(String shortName) {
         this.shortName = shortName;
-        return this;
     }
 
     public int getYearOfFoundation() {
         return yearOfFoundation;
     }
 
-    public University setYearOfFoundation(int yearOfFoundation) {
+    public void setYearOfFoundation(int yearOfFoundation) {
         this.yearOfFoundation = yearOfFoundation;
-        return this;
     }
 
     public StudyProfile getMainProfile() {
         return mainProfile;
     }
 
-    public University setMainProfile(StudyProfile mainProfile) {
+    public void setMainProfile(StudyProfile mainProfile) {
         this.mainProfile = mainProfile;
-        return this;
+    }
+
+    public URL getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(URL website) {
+        this.website = website;
+    }
+
+    public static final class Builder {
+        private String id;
+        private String fullName;
+        private String shortName;
+        private int yearOfFoundation;
+        private StudyProfile mainProfile;
+        private URL website;
+
+        public Builder() {
+        }
+
+        public Builder withId(String val) {
+            id = val;
+            return this;
+        }
+
+        public Builder withFullName(String val) {
+            fullName = val;
+            return this;
+        }
+
+        public Builder withShortName(String val) {
+            shortName = val;
+            return this;
+        }
+
+        public Builder withYearOfFoundation(int val) {
+            yearOfFoundation = val;
+            return this;
+        }
+
+        public Builder withMainProfile(StudyProfile val) {
+            mainProfile = val;
+            return this;
+        }
+
+        public Builder withWebsite(URL val) {
+            website = val;
+            return this;
+        }
+
+        public University build() {
+            return validateUniversity() ? new University(this) : null;
+        }
+
+        public boolean validateUniversity() {
+            return  id != null && !id.trim().isEmpty() &&
+                    fullName != null && !fullName.trim().isEmpty() &&
+                    shortName != null && !shortName.trim().isEmpty() &&
+                    yearOfFoundation < LocalDateTime.now().getYear() &&
+                    mainProfile != null;
+        }
     }
 
     @Override
     public String toString() {
-        return "University [id=" + id + ", full name=" + fullName + ", short name=" + shortName
-                + ", year of foundation=" + yearOfFoundation + ", main profile=" + mainProfile.toString() + "]";
+        return "University [id=" + id + ", full_name=" + fullName +
+                ", short_name=" + shortName + ", year_of_foundation=" + yearOfFoundation +
+                ", study_profile=" + mainProfile + ", website=" + website.toString() + "]";
     }
+
+//    private String id;
+//    private String fullName;
+//    private String shortName;
+//    private int yearOfFoundation;
+//    private StudyProfile mainProfile;
+//    private URL website;
+
 }

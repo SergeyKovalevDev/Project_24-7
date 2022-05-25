@@ -1,60 +1,116 @@
 package ru.sf.models;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Student {
+
     private String fullName;
     private String universityId;
     private int currentCourseNumber;
     private float avgExamScore;
+    private LocalDateTime dateOfBirth;
 
-    public Student() {
-    }
-
-    public Student(String fullName, String universityId, int currentCourseNumber, float avgExamScore) {
-        this.fullName = fullName;
-        this.universityId = universityId;
-        this.currentCourseNumber = currentCourseNumber;
-        this.avgExamScore = avgExamScore;
+    private Student(Builder builder) {
+        setFullName(builder.fullName);
+        setUniversityId(builder.universityId);
+        setCurrentCourseNumber(builder.currentCourseNumber);
+        setAvgExamScore(builder.avgExamScore);
+        setDateOfBirth(builder.dateOfBirth);
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public Student setFullName(String fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
-        return this;
     }
 
     public String getUniversityId() {
         return universityId;
     }
 
-    public Student setUniversityId(String universityId) {
+    public void setUniversityId(String universityId) {
         this.universityId = universityId;
-        return this;
     }
 
     public int getCurrentCourseNumber() {
         return currentCourseNumber;
     }
 
-    public Student setCurrentCourseNumber(int currentCourseNumber) {
+    public void setCurrentCourseNumber(int currentCourseNumber) {
         this.currentCourseNumber = currentCourseNumber;
-        return this;
     }
 
     public float getAvgExamScore() {
         return avgExamScore;
     }
 
-    public Student setAvgExamScore(float avgExamScore) {
+    public void setAvgExamScore(float avgExamScore) {
         this.avgExamScore = avgExamScore;
-        return this;
+    }
+
+    public LocalDateTime getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public static final class Builder {
+        private String fullName;
+        private String universityId;
+        private int currentCourseNumber;
+        private float avgExamScore;
+        private LocalDateTime dateOfBirth;
+
+        public Builder() {
+        }
+
+        public Builder withFullName(String val) {
+            fullName = val;
+            return this;
+        }
+
+        public Builder withUniversityId(String val) {
+            universityId = val;
+            return this;
+        }
+
+        public Builder withCurrentCourseNumber(int val) {
+            currentCourseNumber = val;
+            return this;
+        }
+
+        public Builder withAvgExamScore(float val) {
+            avgExamScore = val;
+            return this;
+        }
+
+        public Builder withDateOfBirth(LocalDateTime val) {
+            dateOfBirth = val;
+            return this;
+        }
+
+        public Student build() {
+            return validateStudent() ? new Student(this) : null;
+        }
+
+        private boolean validateStudent() {
+            return (fullName != null && !fullName.trim().isEmpty() &&
+                    universityId != null && !universityId.trim().isEmpty() &&
+                    currentCourseNumber > 0 &&
+                    avgExamScore >= 0.0f &&
+                    dateOfBirth.isBefore(LocalDateTime.now().minusYears(18)));
+        }
     }
 
     @Override
     public String toString() {
-        return "Student [full name=" + fullName + ", university id=" + universityId +
-                ", current course number=" + currentCourseNumber + ", average exam score=" + avgExamScore + "]";
+        return "Student [full_name=" + fullName + ", university_id=" + universityId +
+                ", current_course_number=" + currentCourseNumber + ", average_exam-score=" + avgExamScore +
+                ", date_of_birth=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "]";
     }
 }
