@@ -4,7 +4,6 @@ import ru.sf.enums.StudyProfile;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class University {
     private String id;
@@ -131,12 +130,4 @@ public class University {
                 ", short_name=" + shortName + ", year_of_foundation=" + yearOfFoundation +
                 ", study_profile=" + mainProfile + ", website=" + website.toString() + "]";
     }
-
-//    private String id;
-//    private String fullName;
-//    private String shortName;
-//    private int yearOfFoundation;
-//    private StudyProfile mainProfile;
-//    private URL website;
-
 }
