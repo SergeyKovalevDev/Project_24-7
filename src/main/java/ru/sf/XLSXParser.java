@@ -40,7 +40,7 @@ public class XLSXParser {
         return INSTANCE;
     }
 
-    public List<Student> getAllStudentsFromXLSX() {
+    public List<Student> getAllStudentsFromXLSX() { //TODO проработать повторяющийся код
         List<Student> studentList = new ArrayList<>();
         try (InputStream inputStream = new FileInputStream("src/main/resources/universityInfo.xlsx");
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
