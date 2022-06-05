@@ -103,7 +103,7 @@ public class Student {
                     universityId != null && !universityId.trim().isEmpty() &&
                     currentCourseNumber > 0 &&
                     avgExamScore >= 0.0f &&
-                    dateOfBirth.isBefore(LocalDateTime.now().minusYears(18)));
+                    dateOfBirth == null || dateOfBirth.isBefore(LocalDateTime.now().minusYears(18)));
         }
     }
 
@@ -111,6 +111,6 @@ public class Student {
     public String toString() {
         return "Student [full_name=" + fullName + ", university_id=" + universityId +
                 ", current_course_number=" + currentCourseNumber + ", average_exam-score=" + avgExamScore +
-                ", date_of_birth=" + dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + "]";
+                ", date_of_birth=" + (dateOfBirth == null ? "нет данных" : dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))) + "]";
     }
 }
