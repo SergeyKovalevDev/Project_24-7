@@ -40,9 +40,9 @@ public class XLSXParser {
         return INSTANCE;
     }
 
-    public List<Student> getAllStudentsFromXLSX() { //TODO проработать повторяющийся код
+    public List<Student> getAllStudentsFromXLSX(String filename) { //TODO проработать повторяющийся код
         List<Student> studentList = new ArrayList<>();
-        try (InputStream inputStream = new FileInputStream("src/main/resources/universityInfo.xlsx");
+        try (InputStream inputStream = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(STUDENT_SHEET_NUMBER);
             Row header = sheet.rowIterator().next();
@@ -68,9 +68,9 @@ public class XLSXParser {
         return studentList;
     }
 
-    public List<University> getAllUniversitiesFromXLSX() {
+    public List<University> getAllUniversitiesFromXLSX(String filename) {
         List<University> universityList = new ArrayList<>();
-        try (InputStream inputStream = new FileInputStream("src/main/resources/universityInfo.xlsx");
+        try (InputStream inputStream = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(UNIVERSITY_SHEET_NUMBER);
             Row header = sheet.rowIterator().next();
