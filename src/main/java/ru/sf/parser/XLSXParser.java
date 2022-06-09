@@ -1,10 +1,13 @@
-package ru.sf;
+package ru.sf.parser;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.sf.PropReader;
 import ru.sf.enums.StudyProfile;
 import ru.sf.models.Student;
 import ru.sf.models.University;
@@ -18,7 +21,11 @@ public class XLSXParser {
 
     private static volatile XLSXParser INSTANCE;
 
-    private static final int STUDENT_SHEET_NUMBER = 0;
+    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
+    private final PropReader propReader = new PropReader("/app.properties");
+
+
+    //    private static final int STUDENT_SHEET_NUMBER = 0;
     private static final int UNIVERSITY_SHEET_NUMBER = 1;
 
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
@@ -40,13 +47,17 @@ public class XLSXParser {
         return INSTANCE;
     }
 
-    public List<Student> getAllStudentsFromXLSX(String filename) { //TODO проработать повторяющийся код
+    public List<Student> getAllStudentsFromXLSX(String filename) {
+        logger.info("Parsing a file {}", filename);
         List<Student> studentList = new ArrayList<>();
-        try (InputStream inputStream = new FileInputStream(filename);
-             XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
-            Sheet sheet = workbook.getSheetAt(STUDENT_SHEET_NUMBER);
+        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filename))) {
+            int sheetNumber = Integer.parseInt(propReader.getProperty("STUDENT_SHEET_NUMBER"));
+            logger.info("Reading sheet number {}", sheetNumber);
+            Sheet sheet = workbook.getSheetAt(sheetNumber);
             Row header = sheet.rowIterator().next();
             if (headerValidator(header, STUDENT_HEADER_VALIDATOR)) {
+                logger.info("The header of the sheet is valid");
+                int counter = 0;
                 for (Row row : sheet) {
                     if (rowValidator(row, STUDENT_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
@@ -58,9 +69,11 @@ public class XLSXParser {
                                 .build();
                         if (student != null) {
                             studentList.add(student);
+                            counter++;
                         }
                     }
                 }
+                logger.info("{} students added to the list", counter);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,12 +82,17 @@ public class XLSXParser {
     }
 
     public List<University> getAllUniversitiesFromXLSX(String filename) {
+        logger.info("Parsing a file {}", filename);
         List<University> universityList = new ArrayList<>();
         try (InputStream inputStream = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
-            Sheet sheet = workbook.getSheetAt(UNIVERSITY_SHEET_NUMBER);
+            int sheetNumber = Integer.parseInt(propReader.getProperty("UNIVERSITY_SHEET_NUMBER"));
+            logger.info("Reading sheet number {}", sheetNumber);
+            Sheet sheet = workbook.getSheetAt(sheetNumber);
             Row header = sheet.rowIterator().next();
             if (headerValidator(header, UNIVERSITY_HEADER_VALIDATOR)) {
+                logger.info("The header of the sheet is valid");
+                int counter = 0;
                 for (Row row : sheet) {
                     if (rowValidator(row, UNIVERSITY_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
@@ -87,9 +105,11 @@ public class XLSXParser {
                                 .build();
                         if (university != null) {
                             universityList.add(university);
+                            counter++;
                         }
                     }
                 }
+                logger.info("{} universities added to the list", counter);
             }
         } catch (IOException e) {
             e.printStackTrace();
