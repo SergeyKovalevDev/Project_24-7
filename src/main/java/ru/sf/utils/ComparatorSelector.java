@@ -1,4 +1,4 @@
-package ru.sf;
+package ru.sf.utils;
 
 import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.UniversityComparatorEnum;
