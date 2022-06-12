@@ -24,10 +24,6 @@ public class XLSXParser {
     private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
     private final PropReader propReader = new PropReader("/app.properties");
 
-
-    //    private static final int STUDENT_SHEET_NUMBER = 0;
-    private static final int UNIVERSITY_SHEET_NUMBER = 1;
-
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
     private static final CellType[] STUDENT_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
     private static final String[] UNIVERSITY_HEADER_VALIDATOR = {"id университета", "Полное название", "Аббревиатура", "Год основания", "Профиль обучения"};
