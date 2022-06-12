@@ -44,17 +44,19 @@ public class XLSXParser {
     }
 
     public List<Student> getAllStudentsFromXLSX(String filename) {
-        logger.info("Parsing a file {}", filename);
+        logger.info("Parsing a file \"{}\"", filename);
         List<Student> studentList = new ArrayList<>();
         try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filename))) {
             int sheetNumber = Integer.parseInt(propReader.getProperty("STUDENT_SHEET_NUMBER"));
-            logger.info("Reading sheet number {}", sheetNumber);
             Sheet sheet = workbook.getSheetAt(sheetNumber);
-            Row header = sheet.rowIterator().next();
+            logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
+            Iterator<Row> rowIterator = sheet.rowIterator();
+            Row header = rowIterator.next();
             if (headerValidator(header, STUDENT_HEADER_VALIDATOR)) {
                 logger.info("The header of the sheet is valid");
                 int counter = 0;
-                for (Row row : sheet) {
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
                     if (rowValidator(row, STUDENT_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
                         Student student = new Student.Builder()
@@ -66,7 +68,11 @@ public class XLSXParser {
                         if (student != null) {
                             studentList.add(student);
                             counter++;
+                        } else {
+                            logger.warn("In the {} row there are errors in the cells. The information was not added to the list", row.getRowNum());
                         }
+                    } else {
+                        logger.warn("The {} row has the wrong cell type. The information was not added to the list", row.getRowNum());
                     }
                 }
                 logger.info("{} students added to the list", counter);
@@ -78,18 +84,20 @@ public class XLSXParser {
     }
 
     public List<University> getAllUniversitiesFromXLSX(String filename) {
-        logger.info("Parsing a file {}", filename);
+        logger.info("Parsing a file \"{}\"", filename);
         List<University> universityList = new ArrayList<>();
         try (InputStream inputStream = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             int sheetNumber = Integer.parseInt(propReader.getProperty("UNIVERSITY_SHEET_NUMBER"));
-            logger.info("Reading sheet number {}", sheetNumber);
             Sheet sheet = workbook.getSheetAt(sheetNumber);
-            Row header = sheet.rowIterator().next();
+            logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
+            Iterator<Row> rowIterator = sheet.rowIterator();
+            Row header = rowIterator.next();
             if (headerValidator(header, UNIVERSITY_HEADER_VALIDATOR)) {
                 logger.info("The header of the sheet is valid");
                 int counter = 0;
-                for (Row row : sheet) {
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
                     if (rowValidator(row, UNIVERSITY_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
                         University university = new University.Builder()
@@ -102,7 +110,11 @@ public class XLSXParser {
                         if (university != null) {
                             universityList.add(university);
                             counter++;
+                        } else {
+                            logger.warn("In the {} row there are errors in the cells. The information was not added to the list", row.getRowNum());
                         }
+                    } else {
+                        logger.warn("The {} row has the wrong cell type. The information was not added to the list", row.getRowNum());
                     }
                 }
                 logger.info("{} universities added to the list", counter);
