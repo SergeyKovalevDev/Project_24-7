@@ -7,7 +7,7 @@ public enum StudyProfile {
     CHEMISTRY ("Химия"),
     LINGUISTICS ("Лингвистика");
 
-    final String profileName;
+    private final String profileName;
 
     StudyProfile(String profileName) {
         this.profileName = profileName;
