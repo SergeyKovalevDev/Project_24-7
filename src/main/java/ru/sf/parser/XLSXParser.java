@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.sf.PropReader;
+import ru.sf.App;
 import ru.sf.enums.StudyProfile;
 import ru.sf.models.Student;
 import ru.sf.models.University;
@@ -22,7 +22,6 @@ public class XLSXParser {
     private static volatile XLSXParser INSTANCE;
 
     private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
-    private final PropReader propReader = new PropReader("/app.properties");
 
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
     private static final CellType[] STUDENT_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
@@ -47,7 +46,7 @@ public class XLSXParser {
         logger.info("Parsing a file \"{}\"", filename);
         List<Student> studentList = new ArrayList<>();
         try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filename))) {
-            int sheetNumber = Integer.parseInt(propReader.getProperty("STUDENT_SHEET_NUMBER"));
+            int sheetNumber = Integer.parseInt(App.properties.getProperty("STUDENT_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();
@@ -88,7 +87,7 @@ public class XLSXParser {
         List<University> universityList = new ArrayList<>();
         try (InputStream inputStream = new FileInputStream(filename);
              XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
-            int sheetNumber = Integer.parseInt(propReader.getProperty("UNIVERSITY_SHEET_NUMBER"));
+            int sheetNumber = Integer.parseInt(App.properties.getProperty("UNIVERSITY_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();

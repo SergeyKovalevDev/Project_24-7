@@ -1,6 +1,6 @@
 package ru.sf.models;
 
-import ru.sf.PropReader;
+import ru.sf.App;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -101,8 +101,7 @@ public class Student {
         }
 
         private boolean validateStudent() {
-            final PropReader propReader = new PropReader("/app.properties");
-            int acceptableAge = Integer.parseInt(propReader.getProperty("ACCEPTABLE_AGE_OF_STUDENTS_IN_YEARS"));
+            int acceptableAge = Integer.parseInt(App.properties.getProperty("ACCEPTABLE_AGE_OF_STUDENTS_IN_YEARS"));
             boolean dateOfBirthValid = true;
             if (dateOfBirth != null) dateOfBirthValid = dateOfBirth.isBefore(LocalDateTime.now().minusYears(acceptableAge));
             return (fullName != null && !fullName.trim().isEmpty() &&
