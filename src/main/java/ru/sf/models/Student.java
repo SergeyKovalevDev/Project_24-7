@@ -1,5 +1,7 @@
 package ru.sf.models;
 
+import ru.sf.PropReader;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -99,11 +101,15 @@ public class Student {
         }
 
         private boolean validateStudent() {
+            final PropReader propReader = new PropReader("/app.properties");
+            int acceptableAge = Integer.parseInt(propReader.getProperty("ACCEPTABLE_AGE_OF_STUDENTS_IN_YEARS"));
+            boolean dateOfBirthValid = true;
+            if (dateOfBirth != null) dateOfBirthValid = dateOfBirth.isBefore(LocalDateTime.now().minusYears(acceptableAge));
             return (fullName != null && !fullName.trim().isEmpty() &&
                     universityId != null && !universityId.trim().isEmpty() &&
                     currentCourseNumber > 0 &&
                     avgExamScore >= 0.0f &&
-                    dateOfBirth == null || dateOfBirth.isBefore(LocalDateTime.now().minusYears(18)));
+                    dateOfBirthValid);
         }
     }
 
