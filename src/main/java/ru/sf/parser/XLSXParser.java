@@ -131,7 +131,9 @@ public class XLSXParser {
     private boolean isRowValid(Row row, CellType[] validator) {
         Iterator<Cell> cells = row.iterator();
         for (CellType cellType : validator) {
-            if (cells.next().getCellType() != cellType) return false;
+            if (cells.next().getCellType() != cellType) {
+                return false;
+            }
         }
         return true;
     }
@@ -140,7 +142,9 @@ public class XLSXParser {
         Iterator<Cell> cells = header.iterator();
         for (String cellName : validator) {
             Cell cell = cells.next();
-            if (cell.getCellType() != CellType.STRING || !cell.getStringCellValue().equals(cellName)) return false;
+            if (cell.getCellType() != CellType.STRING || !cell.getStringCellValue().equals(cellName)) {
+                return false;
+            }
         }
         return true;
     }
