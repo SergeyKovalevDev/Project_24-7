@@ -13,6 +13,9 @@ import ru.sf.models.Student;
 import ru.sf.models.University;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,10 +45,11 @@ public class XLSXParser {
         return INSTANCE;
     }
 
-    public List<Student> getAllStudentsFromXLSX(String filename) {
-        logger.info("Parsing a file \"{}\"", filename);
+    public List<Student> getAllStudentsFromXLSX(Path filePath) {
+        logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<Student> studentList = new ArrayList<>();
-        try (XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(filename))) {
+        try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
+             XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
             int sheetNumber = Integer.parseInt(App.properties.getProperty("STUDENT_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
@@ -82,11 +86,11 @@ public class XLSXParser {
         return studentList;
     }
 
-    public List<University> getAllUniversitiesFromXLSX(String filename) {
-        logger.info("Parsing a file \"{}\"", filename);
+    public List<University> getAllUniversitiesFromXLSX(Path filePath) {
+        logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<University> universityList = new ArrayList<>();
-        try (InputStream inputStream = new FileInputStream(filename);
-             XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
+        try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
+             XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
             int sheetNumber = Integer.parseInt(App.properties.getProperty("UNIVERSITY_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
