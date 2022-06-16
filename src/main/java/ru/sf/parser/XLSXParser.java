@@ -55,12 +55,12 @@ public class XLSXParser {
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();
             Row header = rowIterator.next();
-            if (headerValidator(header, STUDENT_HEADER_VALIDATOR)) {
+            if (isHeaderValid(header, STUDENT_HEADER_VALIDATOR)) {
                 logger.info("The header of the sheet is valid");
                 int counter = 0;
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
-                    if (rowValidator(row, STUDENT_ROW_VALIDATOR)) {
+                    if (isRowValid(row, STUDENT_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
                         Student student = new Student.Builder()
                                 .withUniversityId(cells.next().getStringCellValue())
@@ -96,12 +96,12 @@ public class XLSXParser {
             logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();
             Row header = rowIterator.next();
-            if (headerValidator(header, UNIVERSITY_HEADER_VALIDATOR)) {
+            if (isHeaderValid(header, UNIVERSITY_HEADER_VALIDATOR)) {
                 logger.info("The header of the sheet is valid");
                 int counter = 0;
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
-                    if (rowValidator(row, UNIVERSITY_ROW_VALIDATOR)) {
+                    if (isRowValid(row, UNIVERSITY_ROW_VALIDATOR)) {
                         Iterator<Cell> cells = row.iterator();
                         University university = new University.Builder()
                                 .withId(cells.next().getStringCellValue())
@@ -128,7 +128,7 @@ public class XLSXParser {
         return universityList;
     }
 
-    private boolean rowValidator(Row row, CellType[] validator) {
+    private boolean isRowValid(Row row, CellType[] validator) {
         Iterator<Cell> cells = row.iterator();
         for (CellType cellType : validator) {
             if (cells.next().getCellType() != cellType) return false;
@@ -136,7 +136,7 @@ public class XLSXParser {
         return true;
     }
 
-    private boolean headerValidator(Row header, String[] validator) {
+    private boolean isHeaderValid(Row header, String[] validator) {
         Iterator<Cell> cells = header.iterator();
         for (String cellName : validator) {
             Cell cell = cells.next();
