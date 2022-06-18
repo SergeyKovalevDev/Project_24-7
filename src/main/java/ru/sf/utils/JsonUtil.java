@@ -2,14 +2,13 @@ package ru.sf.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import ru.sf.deserializers.LocalDateDeserializer;
 import ru.sf.models.Student;
 import ru.sf.models.University;
-import ru.sf.serializers.LocalDateTimeSerializer;
+import ru.sf.serializers.LocalDateSerializer;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class JsonUtil {
     public static String studentToJson(Student student) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         return gson.toJson(student);
     }
@@ -36,7 +35,7 @@ public class JsonUtil {
     public static String studentListToJson(List<Student> studentList) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         return gson.toJson(studentList);
@@ -51,7 +50,7 @@ public class JsonUtil {
 
     public static Student jsonToStudent(String jsonString) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.create();
         return gson.fromJson(jsonString, Student.class);
     }
@@ -62,7 +61,7 @@ public class JsonUtil {
 
     public static List<Student> jsonToStudentList(String jsonString) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.create();
         return gson.fromJson(jsonString, new TypeToken<ArrayList<Student>>() {}.getType());
     }
