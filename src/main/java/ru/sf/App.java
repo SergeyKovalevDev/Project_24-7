@@ -13,6 +13,8 @@ import ru.sf.utils.PropertiesReader;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
@@ -50,6 +52,7 @@ public class App {
                     .withFullName("abc")
                     .withCurrentCourseNumber(2)
                     .withAvgExamScore(2.5F)
+                    .withDateOfBirth(LocalDate.of(1980, Month.MAY, 15))
                     .build();
             String studentJsonString = JsonUtil.studentToJson(student);
             System.out.println(studentJsonString);
@@ -78,28 +81,36 @@ public class App {
             System.out.println("----------");
 
             System.out.println("Serialize List of Student into Json String:");
-            List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath);
-            String studentListJsonString = JsonUtil.studentListToJson(studentList);
+            List<Student> sourceStudentList = xlsxParser.getAllStudentsFromXLSX(filepath);
+            String studentListJsonString = JsonUtil.studentListToJson(sourceStudentList);
             System.out.println(studentListJsonString);
             System.out.println("----------");
 
+            System.out.println("Deserialize Json String into List of Student");
+            List<Student> deserializedStudentList = JsonUtil.jsonToStudentList(studentListJsonString);
+            System.out.println(deserializedStudentList);
+            System.out.println("----------");
+
             System.out.println("Serialize List of University into Json String:");
-            List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
-            String universityListJsonString = JsonUtil.universityListToJson(universityList);
+            List<University> sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
+            String universityListJsonString = JsonUtil.universityListToJson(sourceUniversityList);
             System.out.println(universityListJsonString);
             System.out.println("----------");
 
-            List<Student> studentList1 = JsonUtil.jsonToStudentList(studentListJsonString);
-            System.out.println("Comparison of the number of elements in the original and deserialized collections of Student: " +
-                    (studentList.size() == studentList1.size()));
+            System.out.println("Deserialize Json String into List of University");
+            List<University> deserializedUniversityList = JsonUtil.jsonToUniversityList(universityListJsonString);
+            System.out.println(deserializedUniversityList);
+            System.out.println("----------");
 
-            List<University> universityList1 = JsonUtil.jsonToUniversityList(universityListJsonString);
+            System.out.println("Comparison of the number of elements in the original and deserialized collections of Student: " +
+                    (sourceStudentList.size() == deserializedStudentList.size()));
+
             System.out.println("Comparison of the number of elements in the original and deserialized collections of University: " +
-                    (universityList.size() == universityList1.size()));
+                    (sourceUniversityList.size() == deserializedUniversityList.size()));
             System.out.println("----------");
 
             System.out.println("Serialization and deserialization of Student using the Stream API:");
-            studentList
+            sourceStudentList
                     .stream()
                     .filter(student2 -> student2.getUniversityId().equals("0004-high"))
                     .map(JsonUtil::studentToJson)
@@ -109,7 +120,7 @@ public class App {
             System.out.println("----------");
 
             System.out.println("Serialization and deserialization of University using the Stream API:");
-            universityList
+            sourceUniversityList
                     .stream()
                     .filter(university2 -> university2.getMainProfile().equals(StudyProfile.PHYSICS))
                     .map(JsonUtil::universityToJson)
