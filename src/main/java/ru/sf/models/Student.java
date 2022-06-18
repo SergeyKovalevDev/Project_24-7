@@ -2,7 +2,7 @@ package ru.sf.models;
 
 import ru.sf.App;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Student {
@@ -11,7 +11,7 @@ public class Student {
     private String universityId;
     private int currentCourseNumber;
     private float avgExamScore;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private Student(Builder builder) {
         setFullName(builder.fullName);
@@ -53,11 +53,11 @@ public class Student {
         this.avgExamScore = avgExamScore;
     }
 
-    public LocalDateTime getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDateTime dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -66,7 +66,7 @@ public class Student {
         private String universityId;
         private int currentCourseNumber;
         private float avgExamScore;
-        private LocalDateTime dateOfBirth;
+        private LocalDate dateOfBirth;
 
         public Builder() {
         }
@@ -91,7 +91,7 @@ public class Student {
             return this;
         }
 
-        public Builder withDateOfBirth(LocalDateTime val) {
+        public Builder withDateOfBirth(LocalDate val) {
             dateOfBirth = val;
             return this;
         }
@@ -103,7 +103,7 @@ public class Student {
         private boolean validateStudent() {
             int acceptableAge = Integer.parseInt(App.properties.getProperty("ACCEPTABLE_AGE_OF_STUDENTS_IN_YEARS"));
             boolean dateOfBirthValid = true;
-            if (dateOfBirth != null) dateOfBirthValid = dateOfBirth.isBefore(LocalDateTime.now().minusYears(acceptableAge));
+            if (dateOfBirth != null) dateOfBirthValid = dateOfBirth.isBefore(LocalDate.now().minusYears(acceptableAge));
             return (fullName != null && !fullName.trim().isEmpty() &&
                     universityId != null && !universityId.trim().isEmpty() &&
                     currentCourseNumber > 0 &&
