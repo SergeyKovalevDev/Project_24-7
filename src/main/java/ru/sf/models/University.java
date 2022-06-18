@@ -1,16 +1,23 @@
 package ru.sf.models;
 
+import com.google.gson.annotations.SerializedName;
 import ru.sf.enums.StudyProfile;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 
 public class University {
+    @SerializedName("Код университета")
     private String id;
+    @SerializedName("Полное название")
     private String fullName;
+    @SerializedName("Сокращенное название")
     private String shortName;
+    @SerializedName("Год основания")
     private int yearOfFoundation;
+    @SerializedName("Профиль")
     private StudyProfile mainProfile;
+    @SerializedName("Сайт")
     private URL website;
 
     private University(Builder builder) {

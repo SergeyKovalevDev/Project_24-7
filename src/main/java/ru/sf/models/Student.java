@@ -1,5 +1,6 @@
 package ru.sf.models;
 
+import com.google.gson.annotations.SerializedName;
 import ru.sf.App;
 
 import java.time.LocalDate;
@@ -7,10 +8,15 @@ import java.time.format.DateTimeFormatter;
 
 public class Student {
 
+    @SerializedName("ФИО студента")
     private String fullName;
+    @SerializedName("Код университета")
     private String universityId;
+    @SerializedName("Номер курса")
     private int currentCourseNumber;
+    @SerializedName("Средний балл")
     private float avgExamScore;
+    @SerializedName("Дата рождения")
     private LocalDate dateOfBirth;
 
     private Student(Builder builder) {
