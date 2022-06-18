@@ -128,6 +128,6 @@ public class University {
     public String toString() {
         return "University [id=" + id + ", full_name=" + fullName +
                 ", short_name=" + shortName + ", year_of_foundation=" + yearOfFoundation +
-                ", study_profile=" + mainProfile + ", website=" + (website == null ? "нет данных" : website.toString()) + "]";
+                ", main_profile=" + mainProfile + ", website=" + (website == null ? "нет данных" : website.toString()) + "]";
     }
 }
