@@ -66,7 +66,7 @@ public class App {
         System.out.println("Serialization and deserialization of Student using the Stream API:");
         sourceStudentList
                 .stream()
-                .filter(student2 -> student2.getUniversityId().equals("0004-high"))
+                .filter(student -> student.getUniversityId().equals("0004-high"))
                 .map(JsonUtil::studentToJson)
                 .peek(System.out::println)
                 .map(JsonUtil::jsonToStudent)
@@ -76,7 +76,7 @@ public class App {
         System.out.println("Serialization and deserialization of University using the Stream API:");
         sourceUniversityList
                 .stream()
-                .filter(university2 -> university2.getMainProfile().equals(StudyProfile.PHYSICS))
+                .filter(university -> university.getMainProfile().equals(StudyProfile.PHYSICS))
                 .map(JsonUtil::universityToJson)
                 .peek(System.out::println)
                 .map(JsonUtil::jsonToUniversity)
