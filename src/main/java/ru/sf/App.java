@@ -5,7 +5,7 @@ import ru.sf.enums.StudyProfile;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.models.Student;
 import ru.sf.models.University;
-import ru.sf.parser.XLSXParser;
+import ru.sf.xlsxutils.XLSXParser;
 import ru.sf.utils.ComparatorSelector;
 import ru.sf.utils.JsonUtil;
 import ru.sf.utils.PropertiesReader;

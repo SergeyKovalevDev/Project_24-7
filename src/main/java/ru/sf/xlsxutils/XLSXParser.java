@@ -1,4 +1,4 @@
-package ru.sf.parser;
+package ru.sf.xlsxutils;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
