@@ -9,6 +9,7 @@ import ru.sf.parser.XLSXParser;
 import ru.sf.utils.ComparatorSelector;
 import ru.sf.utils.JsonUtil;
 import ru.sf.utils.PropertiesReader;
+import ru.sf.utils.StatisticBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,7 +30,7 @@ public class App {
 
 
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) {
         String sourceFilename = "src/main/resources/universityInfo.xlsx";
         String propertiesFilename = "app.properties";
         Path filepath = Paths.get(sourceFilename);
@@ -38,13 +39,22 @@ public class App {
             XLSXParser xlsxParser = XLSXParser.getInstance();
 
 //            parsingAndSortingUsingStreamApi(filepath, xlsxParser);
+/*
             studentSerializeAndDeserialize();
             universitySerializeAndDeserialize();
             studentListSerializeAndDeserialize(filepath, xlsxParser);
             universityListSerializeAndDeserialize(filepath, xlsxParser);
             numberOfElementsComparison();
             serializationAndDeserializationUsingStreamApi();
+*/
+            stat(filepath, xlsxParser);
         }
+    }
+
+    private static void stat(Path filepath, XLSXParser xlsxParser) {
+        sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
+        sourceStudentList = xlsxParser.getAllStudentsFromXLSX(filepath);
+        StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList).forEach(System.out::println);
     }
 
     private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) {
