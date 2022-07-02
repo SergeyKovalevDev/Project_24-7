@@ -3,6 +3,7 @@ package ru.sf.models;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.poi.ss.usermodel.CellType;
 import ru.sf.enums.StudyProfile;
 
 import java.util.List;
@@ -12,22 +13,21 @@ import java.util.List;
 @ToString
 public class Statistics {
 
-    // профиль обучения
     private StudyProfile mainProfile;
-    // средний балл за экзамен
     private float avgExamScore;
-    // количество студентов по профилю
-    private long numberOfStudentsByProfile;
-    // количество университетов по профилю
-    private long numberOfUniversitiesByProfile;
-    // названия университетов
+    private long numberOfStudents;
+    private long numberOfUniversities;
     private List<String> universityName;
+    private final String[] HEADER =
+            {"Профиль обучения", "Количество университетов", "Названия университетов", "Количество студентов", "Средний балл"};
+    private final CellType[] ROW_CELL_TYPES =
+            {CellType.STRING, CellType.NUMERIC, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
 
     private Statistics(Builder builder) {
         setMainProfile(builder.mainProfile);
         setAvgExamScore(builder.avgExamScore);
-        setNumberOfStudentsByProfile(builder.numberOfStudentsByProfile);
-        setNumberOfUniversitiesByProfile(builder.numberOfUniversitiesByProfile);
+        setNumberOfStudents(builder.numberOfStudentsByProfile);
+        setNumberOfUniversities(builder.numberOfUniversitiesByProfile);
         setUniversityName(builder.universityName);
     }
 
