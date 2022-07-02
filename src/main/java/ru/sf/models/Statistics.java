@@ -18,9 +18,9 @@ public class Statistics {
     private long numberOfStudents;
     private long numberOfUniversities;
     private List<String> universityName;
-    private final String[] HEADER =
+    public static final String[] HEADER =
             {"Профиль обучения", "Количество университетов", "Названия университетов", "Количество студентов", "Средний балл"};
-    private final CellType[] ROW_CELL_TYPES =
+    public static final CellType[] ROW_CELL_TYPES =
             {CellType.STRING, CellType.NUMERIC, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
 
     private Statistics(Builder builder) {
