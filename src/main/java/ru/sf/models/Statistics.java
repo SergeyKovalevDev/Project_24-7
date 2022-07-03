@@ -12,22 +12,17 @@ import java.util.List;
 @ToString
 public class Statistics {
 
-    // профиль обучения
     private StudyProfile mainProfile;
-    // средний балл за экзамен
     private float avgExamScore;
-    // количество студентов по профилю
-    private long numberOfStudentsByProfile;
-    // количество университетов по профилю
-    private long numberOfUniversitiesByProfile;
-    // названия университетов
+    private long numberOfStudents;
+    private long numberOfUniversities;
     private List<String> universityName;
 
     private Statistics(Builder builder) {
         setMainProfile(builder.mainProfile);
         setAvgExamScore(builder.avgExamScore);
-        setNumberOfStudentsByProfile(builder.numberOfStudentsByProfile);
-        setNumberOfUniversitiesByProfile(builder.numberOfUniversitiesByProfile);
+        setNumberOfStudents(builder.numberOfStudentsByProfile);
+        setNumberOfUniversities(builder.numberOfUniversitiesByProfile);
         setUniversityName(builder.universityName);
     }
 
