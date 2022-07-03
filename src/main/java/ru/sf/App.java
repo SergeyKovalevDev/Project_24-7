@@ -3,13 +3,15 @@ package ru.sf;
 import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.StudyProfile;
 import ru.sf.enums.UniversityComparatorEnum;
+import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
-import ru.sf.xlsxutils.XLSXParser;
 import ru.sf.utils.ComparatorSelector;
 import ru.sf.utils.JsonUtil;
 import ru.sf.utils.PropertiesReader;
 import ru.sf.utils.StatisticBuilder;
+import ru.sf.xlsxutils.XLSXParser;
+import ru.sf.xlsxutils.XLSXWriter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,31 +32,32 @@ public class App {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
         String sourceFilename = "src/main/resources/universityInfo.xlsx";
+        Path source = Paths.get(sourceFilename);
+        String destinationFilename = "src/statistic.xlsx";
         String propertiesFilename = "app.properties";
-        Path filepath = Paths.get(sourceFilename);
         properties = new PropertiesReader().loadProperties(propertiesFilename);
         if (properties != null) {
             XLSXParser xlsxParser = XLSXParser.getInstance();
-
-//            parsingAndSortingUsingStreamApi(filepath, xlsxParser);
 /*
+            parsingAndSortingUsingStreamApi(source, xlsxParser);
             studentSerializeAndDeserialize();
             universitySerializeAndDeserialize();
-            studentListSerializeAndDeserialize(filepath, xlsxParser);
-            universityListSerializeAndDeserialize(filepath, xlsxParser);
+            studentListSerializeAndDeserialize(source, xlsxParser);
+            universityListSerializeAndDeserialize(source, xlsxParser);
             numberOfElementsComparison();
             serializationAndDeserializationUsingStreamApi();
 */
-            stat(filepath, xlsxParser);
+            generateStatisticsAndWriteToFile(source, destinationFilename, xlsxParser);
         }
     }
 
-    private static void stat(Path filepath, XLSXParser xlsxParser) {
-        sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
-        sourceStudentList = xlsxParser.getAllStudentsFromXLSX(filepath);
-        StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList).forEach(System.out::println);
+    private static void generateStatisticsAndWriteToFile(Path source, String destination, XLSXParser xlsxParser) {
+        sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(source);
+        sourceStudentList = xlsxParser.getAllStudentsFromXLSX(source);
+        List<Statistics> statisticsList = StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList);
+        new XLSXWriter().workbookCreateAndWrite(statisticsList, destination);
     }
 
     private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) {

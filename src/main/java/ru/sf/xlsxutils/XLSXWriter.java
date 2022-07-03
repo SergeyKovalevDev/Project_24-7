@@ -4,57 +4,59 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.sf.models.Statistics;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public class XLSXWriter {
 
-    private final String[] header;
-    private final CellType headerCellType;
-    private final CellStyle headerCellStyle;
-    private final CellType[] cellTypes;
-
-    public XLSXWriter(String[] header, CellType headerCellType, CellStyle headerCellStyle, CellType[] cellTypes) {
-        this.header = header;
-        this.headerCellType = headerCellType;
-        this.headerCellStyle = headerCellStyle;
-        this.cellTypes = cellTypes;
-    }
-
-    public void tableCreate(List<Statistics> statisticsList, Path filepath) {
+    public void workbookCreateAndWrite(List<Statistics> statisticsList, String filename) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Статистика");
 
+            Font font = workbook.createFont();
+            font.setFontName("Arial");
+            font.setBold(true);
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(font);
+            createHeaderRow(sheet, 0, headerCellStyle);
+
+            int rowCount = 1;
+            for (Statistics statistics : statisticsList) {
+                createContentRow(sheet, rowCount++, statistics);
+            }
+
+            try (FileOutputStream out = new FileOutputStream(filename)) {
+                workbook.write(out);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void headerCreator(Sheet sheet, String[] header) {
-
-        for (String str :
-                header) {
-            sheet.createRow(0).createCell(0);
-        }
+    private void createHeaderRow(Sheet sheet, int rowNumber, CellStyle cellStyle) {
+        Row row = sheet.createRow(rowNumber);
+        row.createCell(0).setCellValue("Профиль обучения");
+        row.getCell(0).setCellStyle(cellStyle);
+        row.createCell(1).setCellValue("Количество университетов");
+        row.getCell(1).setCellStyle(cellStyle);
+        row.createCell(2).setCellValue("Названия университетов");
+        row.getCell(2).setCellStyle(cellStyle);
+        row.createCell(3).setCellValue("Количество студентов");
+        row.getCell(3).setCellStyle(cellStyle);
+        row.createCell(4).setCellValue("Средний балл");
+        row.getCell(4).setCellStyle(cellStyle);
     }
 
-    private void rowCreator(Row row, String[] content, CellType[] cellTypes) {
-
-        for (CellType cellType : cellTypes) {
-            row.createCell(0, cellType);
-        }
-
-
-    }
-
-    private void createHeaderRow(Sheet sheet) {
-        Row row = sheet.createRow(0);
-        for (int i = 0; i < header.length; i++) {
-            Cell cell = row.createCell(i, headerCellType);
-            cell.setCellValue(header[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
+    private void createContentRow(Sheet sheet, int rowNumber, Statistics statistics) {
+        Row row = sheet.createRow(rowNumber);
+        row.createCell(0).setCellValue(statistics.getMainProfile().toString());
+        row.createCell(1).setCellValue(statistics.getNumberOfUniversities());
+        row.createCell(2).setCellValue("names");
+        row.createCell(3).setCellValue(statistics.getNumberOfStudents());
+        row.createCell(4).setCellValue(statistics.getAvgExamScore());
     }
 }
