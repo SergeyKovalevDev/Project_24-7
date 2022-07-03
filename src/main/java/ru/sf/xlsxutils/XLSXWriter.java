@@ -55,8 +55,17 @@ public class XLSXWriter {
         Row row = sheet.createRow(rowNumber);
         row.createCell(0).setCellValue(statistics.getMainProfile().toString());
         row.createCell(1).setCellValue(statistics.getNumberOfUniversities());
-        row.createCell(2).setCellValue("names");
+        row.createCell(2).setCellValue(createUniversityNames(statistics.getUniversityName()));
         row.createCell(3).setCellValue(statistics.getNumberOfStudents());
         row.createCell(4).setCellValue(statistics.getAvgExamScore());
+        System.out.println(statistics.getAvgExamScore());
+    }
+
+    private String createUniversityNames(List<String> universityNames) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String universityName : universityNames) {
+            stringBuilder.append(universityName).append(", ");
+        }
+        return stringBuilder.substring(0, stringBuilder.length()-2);
     }
 }
