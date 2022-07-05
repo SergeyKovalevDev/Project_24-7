@@ -16,11 +16,12 @@ public class XLSXWriter {
         try (Workbook workbook = new XSSFWorkbook()) {
 
             // Logger configuration
-            String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
+            String loggerName = this.getClass().getSimpleName() + ".class." + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
             Logger logger = LoggerFactory.getLogger(loggerName);
 
-
-            Sheet sheet = workbook.createSheet("Статистика");
+            String sheetName = "Статистика";
+            Sheet sheet = workbook.createSheet(sheetName);
+            logger.info("Created workbook with sheet \"{}\"", sheetName);
 
             Font headerFont = workbook.createFont();
             headerFont.setFontName("Arial");
@@ -33,6 +34,7 @@ public class XLSXWriter {
             for (Statistics statistics : statisticsList) {
                 createContentRow(sheet, rowCount++, statistics);
             }
+            logger.info("{} rows added into sheet \"{}\"", rowCount - 1, sheetName);
 
             try (FileOutputStream out = new FileOutputStream(filename)) {
                 workbook.write(out);
@@ -74,6 +76,6 @@ public class XLSXWriter {
         for (String universityName : universityNames) {
             stringBuilder.append(universityName).append(", ");
         }
-        return stringBuilder.substring(0, stringBuilder.length()-2);
+        return stringBuilder.substring(0, stringBuilder.length() - 2);
     }
 }

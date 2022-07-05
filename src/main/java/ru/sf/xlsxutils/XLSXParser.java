@@ -55,7 +55,7 @@ public class XLSXParser {
              XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
             int sheetNumber = Integer.parseInt(App.properties.getProperty("STUDENT_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
-            logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
+            logger.info("Reading sheet number {} \"{}\"", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();
             Row header = rowIterator.next();
             if (isHeaderValid(header, STUDENT_HEADER_VALIDATOR)) {
@@ -101,7 +101,7 @@ public class XLSXParser {
              XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
             int sheetNumber = Integer.parseInt(App.properties.getProperty("UNIVERSITY_SHEET_NUMBER"));
             Sheet sheet = workbook.getSheetAt(sheetNumber);
-            logger.info("Reading sheet number {} ({})", sheetNumber, sheet.getSheetName());
+            logger.info("Reading sheet number {} \"{}\"", sheetNumber, sheet.getSheetName());
             Iterator<Row> rowIterator = sheet.rowIterator();
             Row header = rowIterator.next();
             if (isHeaderValid(header, UNIVERSITY_HEADER_VALIDATOR)) {

@@ -29,7 +29,7 @@ public class App {
         properties = new PropertiesReader().loadProperties(propertiesFilename);
         if (properties != null) {
             XLSXParser xlsxParser = XLSXParser.getInstance();
-            parsingAndSortingUsingStreamApi(source, xlsxParser);
+//            parsingAndSortingUsingStreamApi(source, xlsxParser);
             generateStatisticsAndWriteToFile(source, destinationFilename, xlsxParser);
         }
     }
@@ -38,9 +38,15 @@ public class App {
         Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
         Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
 
-        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath);
+        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath)
+                .stream()
+                .sorted(studentComparator)
+                .toList();
 
-        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
+        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath)
+                .stream()
+                .sorted(universityComparator)
+                .toList();
     }
 
     private static void generateStatisticsAndWriteToFile(Path source, String destination, XLSXParser xlsxParser) {
