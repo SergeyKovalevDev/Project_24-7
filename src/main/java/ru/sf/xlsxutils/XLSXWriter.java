@@ -2,6 +2,8 @@ package ru.sf.xlsxutils;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.sf.models.Statistics;
 
 import java.io.FileOutputStream;
@@ -12,13 +14,19 @@ public class XLSXWriter {
 
     public void workbookCreateAndWrite(List<Statistics> statisticsList, String filename) {
         try (Workbook workbook = new XSSFWorkbook()) {
+
+            // Logger configuration
+            String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
+            Logger logger = LoggerFactory.getLogger(loggerName);
+
+
             Sheet sheet = workbook.createSheet("Статистика");
 
-            Font font = workbook.createFont();
-            font.setFontName("Arial");
-            font.setBold(true);
+            Font headerFont = workbook.createFont();
+            headerFont.setFontName("Arial");
+            headerFont.setBold(true);
             CellStyle headerCellStyle = workbook.createCellStyle();
-            headerCellStyle.setFont(font);
+            headerCellStyle.setFont(headerFont);
             createHeaderRow(sheet, 0, headerCellStyle);
 
             int rowCount = 1;
@@ -28,6 +36,7 @@ public class XLSXWriter {
 
             try (FileOutputStream out = new FileOutputStream(filename)) {
                 workbook.write(out);
+                logger.info("Writing to a file \"{}\" successful", filename);
             } catch (IOException e) {
                 e.printStackTrace();
             }

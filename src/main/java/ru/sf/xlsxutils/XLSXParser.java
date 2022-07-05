@@ -23,9 +23,7 @@ import java.util.List;
 public class XLSXParser {
 
     private static volatile XLSXParser INSTANCE;
-
-    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
-
+//    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
     private static final CellType[] STUDENT_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
     private static final String[] UNIVERSITY_HEADER_VALIDATOR = {"id университета", "Полное название", "Аббревиатура", "Год основания", "Профиль обучения"};
@@ -46,6 +44,11 @@ public class XLSXParser {
     }
 
     public List<Student> getAllStudentsFromXLSX(Path filePath) {
+
+        // Logger configuration
+        String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(loggerName);
+
         logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<Student> studentList = new ArrayList<>();
         try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
@@ -72,10 +75,10 @@ public class XLSXParser {
                             studentList.add(student);
                             counter++;
                         } else {
-                            logger.warn("In the {} row there are errors in the cells. The information was not added to the list", row.getRowNum());
+                            logger.warn("In the {} row there are errors in the cells. Not added to the list", row.getRowNum());
                         }
                     } else {
-                        logger.warn("The {} row has the wrong cell type. The information was not added to the list", row.getRowNum());
+                        logger.warn("The {} row has the wrong cell type. Not added to the list", row.getRowNum());
                     }
                 }
                 logger.info("{} students added to the list", counter);
@@ -87,6 +90,11 @@ public class XLSXParser {
     }
 
     public List<University> getAllUniversitiesFromXLSX(Path filePath) {
+
+        // Logger configuration
+        String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(loggerName);
+
         logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<University> universityList = new ArrayList<>();
         try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
@@ -114,10 +122,10 @@ public class XLSXParser {
                             universityList.add(university);
                             counter++;
                         } else {
-                            logger.warn("In the {} row there are errors in the cells. The information was not added to the list", row.getRowNum());
+                            logger.warn("In the {} row there are errors in the cells. Not added to the list", row.getRowNum());
                         }
                     } else {
-                        logger.warn("The {} row has the wrong cell type. The information was not added to the list", row.getRowNum());
+                        logger.warn("The {} row has the wrong cell type. Not added to the list", row.getRowNum());
                     }
                 }
                 logger.info("{} universities added to the list", counter);

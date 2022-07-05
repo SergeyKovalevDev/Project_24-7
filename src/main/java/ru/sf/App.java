@@ -24,7 +24,7 @@ public class App {
     public static void main(String[] args) throws MalformedURLException {
         String sourceFilename = "src/main/resources/universityInfo.xlsx";
         Path source = Paths.get(sourceFilename);
-        String destinationFilename = "src/statistic.xlsx";
+        String destinationFilename = "statistic.xlsx";
         String propertiesFilename = "app.properties";
         properties = new PropertiesReader().loadProperties(propertiesFilename);
         if (properties != null) {
@@ -34,25 +34,19 @@ public class App {
         }
     }
 
+    private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) {
+        Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
+        Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
+
+        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath);
+
+        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath);
+    }
+
     private static void generateStatisticsAndWriteToFile(Path source, String destination, XLSXParser xlsxParser) {
         List<University> sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(source);
         List<Student> sourceStudentList = xlsxParser.getAllStudentsFromXLSX(source);
         List<Statistics> statisticsList = StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList);
         new XLSXWriter().workbookCreateAndWrite(statisticsList, destination);
-    }
-
-    private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) {
-        Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
-        Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
-
-        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath)
-                .stream()
-                .sorted(studentComparator)
-                .toList();
-
-        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath)
-                .stream()
-                .sorted(universityComparator)
-                .toList();
     }
 }
