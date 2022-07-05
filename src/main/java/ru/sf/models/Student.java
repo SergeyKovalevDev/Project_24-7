@@ -1,11 +1,17 @@
 package ru.sf.models;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.sf.App;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
+@Getter
+@Setter(AccessLevel.PRIVATE)
+@ToString
 public class Student {
 
     @SerializedName("ФИО студента")
@@ -25,46 +31,6 @@ public class Student {
         setCurrentCourseNumber(builder.currentCourseNumber);
         setAvgExamScore(builder.avgExamScore);
         setDateOfBirth(builder.dateOfBirth);
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getUniversityId() {
-        return universityId;
-    }
-
-    public void setUniversityId(String universityId) {
-        this.universityId = universityId;
-    }
-
-    public int getCurrentCourseNumber() {
-        return currentCourseNumber;
-    }
-
-    public void setCurrentCourseNumber(int currentCourseNumber) {
-        this.currentCourseNumber = currentCourseNumber;
-    }
-
-    public float getAvgExamScore() {
-        return avgExamScore;
-    }
-
-    public void setAvgExamScore(float avgExamScore) {
-        this.avgExamScore = avgExamScore;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public static final class Builder {
@@ -116,12 +82,5 @@ public class Student {
                     avgExamScore >= 0.0f &&
                     dateOfBirthValid);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Student [full_name=" + fullName + ", university_id=" + universityId +
-                ", current_course_number=" + currentCourseNumber + ", average_exam-score=" + avgExamScore +
-                ", date_of_birth=" + (dateOfBirth == null ? "нет данных" : dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))) + "]";
     }
 }

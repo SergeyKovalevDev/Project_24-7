@@ -1,11 +1,18 @@
 package ru.sf.models;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.sf.enums.StudyProfile;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter(AccessLevel.PRIVATE)
+@ToString
 public class University {
     @SerializedName("Код университета")
     private String id;
@@ -129,12 +136,5 @@ public class University {
                     yearOfFoundation < LocalDateTime.now().getYear() &&
                     mainProfile != null;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "University [id=" + id + ", full_name=" + fullName +
-                ", short_name=" + shortName + ", year_of_foundation=" + yearOfFoundation +
-                ", main_profile=" + mainProfile + ", website=" + (website == null ? "нет данных" : website.toString()) + "]";
     }
 }

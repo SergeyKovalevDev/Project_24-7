@@ -58,7 +58,6 @@ public class XLSXWriter {
         row.createCell(2).setCellValue(createUniversityNames(statistics.getUniversityName()));
         row.createCell(3).setCellValue(statistics.getNumberOfStudents());
         row.createCell(4).setCellValue(statistics.getAvgExamScore());
-        System.out.println(statistics.getAvgExamScore());
     }
 
     private String createUniversityNames(List<String> universityNames) {

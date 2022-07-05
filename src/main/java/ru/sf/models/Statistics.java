@@ -1,5 +1,6 @@
 package ru.sf.models;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +9,7 @@ import ru.sf.enums.StudyProfile;
 import java.util.List;
 
 @Getter
-@Setter
+@Setter(AccessLevel.PRIVATE)
 @ToString
 public class Statistics {
 
