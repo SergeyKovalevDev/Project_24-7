@@ -8,15 +8,14 @@ import java.util.Properties;
 
 public class PropertiesReader {
 
-    public PropertiesReader() {}
+    private PropertiesReader() {}
 
-    public Properties loadProperties(String propertiesFilename) throws AppException {
+    public static Properties loadProperties(String propertiesFilename) throws AppException {
         Properties properties = new Properties();
-        try (InputStream inputStream = this.getClass().getResourceAsStream("/" + propertiesFilename)) {
-            if (inputStream == null) throw new IOException();
+        try (InputStream inputStream = PropertiesReader.class.getResourceAsStream("/" + propertiesFilename)) {
             properties.load(inputStream);
             return properties;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new AppException("Properties file \"" + propertiesFilename + "\" not found!");
         }
     }

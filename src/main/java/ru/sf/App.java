@@ -36,11 +36,9 @@ public class App {
             throw new RuntimeException(e);
         }
 
-//        String sourceFilename = "src/main/resources/universityInfo.xlsx";
-//        String destinationFilename = "statistic.xlsx";
         String propertiesFilename = "app.properties";
         try {
-            properties = new PropertiesReader().loadProperties(propertiesFilename);
+            properties = PropertiesReader.loadProperties(propertiesFilename);
             String sourceFilename = properties.getProperty("SOURCE_FILENAME");
             Path source = Paths.get(sourceFilename);
             String destinationFilename = properties.getProperty("DESTINATION_FILENAME");
