@@ -12,13 +12,18 @@ import java.util.List;
 
 public class XLSXWriter {
 
-    public void workbookCreateAndWrite(List<Statistics> statisticsList, String filename) {
+    private static final String className = XLSXWriter.class.getSimpleName() + ".class.";
+
+    public static Workbook createWorkbook(List<Statistics> statisticsList) {
+
+        // Logger configuration
+        String loggerName = className + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(loggerName);
+
         try (Workbook workbook = new XSSFWorkbook()) {
 
-            // Logger configuration
-            String loggerName = this.getClass().getSimpleName() + ".class." + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
-            Logger logger = LoggerFactory.getLogger(loggerName);
 
+            // workbook create
             String sheetName = "Статистика";
             Sheet sheet = workbook.createSheet(sheetName);
             logger.info("Created workbook with sheet \"{}\"", sheetName);
@@ -35,20 +40,31 @@ public class XLSXWriter {
                 createContentRow(sheet, rowCount++, statistics);
             }
             logger.info("{} rows added into sheet \"{}\"", rowCount - 1, sheetName);
-
-            try (FileOutputStream out = new FileOutputStream(filename)) {
-                workbook.write(out);
-                logger.info("Writing to a file \"{}\" successful", filename);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return workbook;
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.error("Error creating a workbook\n{}", e.toString());
+            throw new RuntimeException(e);//TODO разобраться как поступить при этой ошибке
         }
     }
 
-    private void createHeaderRow(Sheet sheet, int rowNumber, CellStyle cellStyle) {
+    public static void writeWorkbook(Workbook workbook, String filename) {
+
+        // Logger configuration
+        String loggerName = className + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(loggerName);
+
+
+        try (FileOutputStream out = new FileOutputStream(filename)) {
+            workbook.write(out);
+            logger.info("Writing to a file \"{}\" successful", filename);
+        } catch (IOException e) {
+            logger.error("Error saving the \"{}\" file\n{}", filename, e.toString());
+        }
+    }
+
+
+    private static void createHeaderRow(Sheet sheet, int rowNumber, CellStyle cellStyle) {
         Row row = sheet.createRow(rowNumber);
         row.createCell(0).setCellValue("Профиль обучения");
         row.getCell(0).setCellStyle(cellStyle);
@@ -62,7 +78,7 @@ public class XLSXWriter {
         row.getCell(4).setCellStyle(cellStyle);
     }
 
-    private void createContentRow(Sheet sheet, int rowNumber, Statistics statistics) {
+    private static void createContentRow(Sheet sheet, int rowNumber, Statistics statistics) {
         Row row = sheet.createRow(rowNumber);
         row.createCell(0).setCellValue(statistics.getMainProfile().toString());
         row.createCell(1).setCellValue(statistics.getNumberOfUniversities());
@@ -71,7 +87,7 @@ public class XLSXWriter {
         row.createCell(4).setCellValue(statistics.getAvgExamScore());
     }
 
-    private String createUniversityNames(List<String> universityNames) {
+    private static String createUniversityNames(List<String> universityNames) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String universityName : universityNames) {
             stringBuilder.append(universityName).append(", ");

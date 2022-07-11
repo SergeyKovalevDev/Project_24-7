@@ -1,5 +1,6 @@
 package ru.sf;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.models.Statistics;
@@ -11,7 +12,6 @@ import ru.sf.utils.StatisticBuilder;
 import ru.sf.xlsxutils.XLSXParser;
 import ru.sf.xlsxutils.XLSXWriter;
 
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
@@ -21,7 +21,7 @@ import java.util.Properties;
 public class App {
     public static Properties properties;
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) {
         String sourceFilename = "src/main/resources/universityInfo.xlsx";
         Path source = Paths.get(sourceFilename);
         String destinationFilename = "statistic.xlsx";
@@ -30,7 +30,7 @@ public class App {
         if (properties != null) {
             XLSXParser xlsxParser = XLSXParser.getInstance();
 //            parsingAndSortingUsingStreamApi(source, xlsxParser);
-            generateStatisticsAndWriteToFile(source, destinationFilename, xlsxParser);
+            getStatisticalReport(source, destinationFilename, xlsxParser);
         }
     }
 
@@ -49,10 +49,15 @@ public class App {
                 .toList();
     }
 
-    private static void generateStatisticsAndWriteToFile(Path source, String destination, XLSXParser xlsxParser) {
-        List<University> sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(source);
-        List<Student> sourceStudentList = xlsxParser.getAllStudentsFromXLSX(source);
+    private static void getStatisticalReport(Path sourcePath, String destFilename, XLSXParser xlsxParser) {
+        List<University> sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(sourcePath);
+        List<Student> sourceStudentList = xlsxParser.getAllStudentsFromXLSX(sourcePath);
         List<Statistics> statisticsList = StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList);
-        new XLSXWriter().workbookCreateAndWrite(statisticsList, destination);
+        Workbook workbook = XLSXWriter.createWorkbook(statisticsList);
+        XLSXWriter.writeWorkbook(workbook, destFilename);
+    }
+
+    private static void createXLSXFromList(List<Statistics> statisticsList) {
+
     }
 }
