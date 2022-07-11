@@ -14,6 +14,9 @@ public class XLSXWriter {
 
     public static final Logger logger = Logger.getLogger(XLSXWriter.class.getName());
 
+    private XLSXWriter() {
+    }
+
     public static void createWorkbook(List<Statistics> statisticsList, String destFilename) throws AppException {
 
         try (Workbook workbook = new XSSFWorkbook()) {
