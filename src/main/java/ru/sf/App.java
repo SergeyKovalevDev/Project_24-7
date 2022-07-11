@@ -36,19 +36,18 @@ public class App {
             throw new RuntimeException(e);
         }
 
-        String sourceFilename = "src/main/resources/universityInfo.xlsx";
-        Path source = Paths.get(sourceFilename);
-        String destinationFilename = "statistic.xlsx";
+//        String sourceFilename = "src/main/resources/universityInfo.xlsx";
+//        String destinationFilename = "statistic.xlsx";
         String propertiesFilename = "app.properties";
-        properties = new PropertiesReader().loadProperties(propertiesFilename);
-        if (properties != null) {
+        try {
+            properties = new PropertiesReader().loadProperties(propertiesFilename);
+            String sourceFilename = properties.getProperty("SOURCE_FILENAME");
+            Path source = Paths.get(sourceFilename);
+            String destinationFilename = properties.getProperty("DESTINATION_FILENAME");
             XLSXParser xlsxParser = XLSXParser.getInstance();
-//            parsingAndSortingUsingStreamApi(source, xlsxParser);
-            try {
-                getStatisticalReport(source, destinationFilename, xlsxParser);
-            } catch (AppException e) {
-                logger.log(Level.SEVERE,"Application error", e);
-            }
+            getStatisticalReport(source, destinationFilename, xlsxParser);
+        } catch (AppException e) {
+            logger.log(Level.SEVERE, "Application error", e);
         }
     }
 
