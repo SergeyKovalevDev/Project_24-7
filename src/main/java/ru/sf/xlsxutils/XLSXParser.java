@@ -22,8 +22,8 @@ import java.util.List;
 
 public class XLSXParser {
 
+    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class.getName());
     private static volatile XLSXParser INSTANCE;
-//    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
     private static final CellType[] STUDENT_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
     private static final String[] UNIVERSITY_HEADER_VALIDATOR = {"id университета", "Полное название", "Аббревиатура", "Год основания", "Профиль обучения"};
@@ -44,10 +44,6 @@ public class XLSXParser {
     }
 
     public List<Student> getAllStudentsFromXLSX(Path filePath) {
-
-        // Logger configuration
-        String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(loggerName);
 
         logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<Student> studentList = new ArrayList<>();
@@ -90,10 +86,6 @@ public class XLSXParser {
     }
 
     public List<University> getAllUniversitiesFromXLSX(Path filePath) {
-
-        // Logger configuration
-        String loggerName = this.getClass().getSimpleName() + ".class." + new Object(){}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(loggerName);
 
         logger.info("Parsing a file \"{}\"", filePath.getFileName());
         List<University> universityList = new ArrayList<>();

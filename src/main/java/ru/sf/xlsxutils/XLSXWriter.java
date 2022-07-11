@@ -10,15 +10,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class XLSXWriter {
+public class XLSXWriter { //TODO стоит ли этот класс делать синглтоном?
 
-    private static final String className = XLSXWriter.class.getSimpleName() + ".class.";
+    // Logger configuration
+    private static final Logger logger = LoggerFactory.getLogger(XLSXWriter.class.getName());
 
     public static void createWorkbook(List<Statistics> statisticsList, String destFilename) {
-
-        // Logger configuration
-        String methodName = new Object() {}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(className + methodName);
 
         try (Workbook workbook = new XSSFWorkbook()) {
 
@@ -50,10 +47,6 @@ public class XLSXWriter {
     }
 
     private static void writeWorkbook(Workbook workbook, String filename) {
-
-        // Logger configuration
-        String methodName = new Object() {}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(className + methodName);
 
         try (FileOutputStream out = new FileOutputStream(filename)) {
             workbook.write(out);
