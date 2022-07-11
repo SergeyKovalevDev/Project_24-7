@@ -1,6 +1,5 @@
 package ru.sf;
 
-import org.apache.poi.ss.usermodel.Workbook;
 import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.models.Statistics;
@@ -53,11 +52,6 @@ public class App {
         List<University> sourceUniversityList = xlsxParser.getAllUniversitiesFromXLSX(sourcePath);
         List<Student> sourceStudentList = xlsxParser.getAllStudentsFromXLSX(sourcePath);
         List<Statistics> statisticsList = StatisticBuilder.getStatistic(sourceStudentList, sourceUniversityList);
-        Workbook workbook = XLSXWriter.createWorkbook(statisticsList);
-        XLSXWriter.writeWorkbook(workbook, destFilename);
-    }
-
-    private static void createXLSXFromList(List<Statistics> statisticsList) {
-
+        XLSXWriter.createWorkbook(statisticsList, destFilename);
     }
 }

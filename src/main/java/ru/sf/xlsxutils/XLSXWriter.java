@@ -14,11 +14,11 @@ public class XLSXWriter {
 
     private static final String className = XLSXWriter.class.getSimpleName() + ".class.";
 
-    public static Workbook createWorkbook(List<Statistics> statisticsList) {
+    public static void createWorkbook(List<Statistics> statisticsList, String destFilename) {
 
         // Logger configuration
-        String loggerName = className + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(loggerName);
+        String methodName = new Object() {}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(className + methodName);
 
         try (Workbook workbook = new XSSFWorkbook()) {
 
@@ -40,7 +40,8 @@ public class XLSXWriter {
                 createContentRow(sheet, rowCount++, statistics);
             }
             logger.info("{} rows added into sheet \"{}\"", rowCount - 1, sheetName);
-            return workbook;
+
+            writeWorkbook(workbook, destFilename);
 
         } catch (IOException e) {
             logger.error("Error creating a workbook\n{}", e.toString());
@@ -48,18 +49,18 @@ public class XLSXWriter {
         }
     }
 
-    public static void writeWorkbook(Workbook workbook, String filename) {
+    private static void writeWorkbook(Workbook workbook, String filename) {
 
         // Logger configuration
-        String loggerName = className + new Object() {}.getClass().getEnclosingMethod().getName() + "()";
-        Logger logger = LoggerFactory.getLogger(loggerName);
-
+        String methodName = new Object() {}.getClass().getEnclosingMethod().getName() + "()";
+        Logger logger = LoggerFactory.getLogger(className + methodName);
 
         try (FileOutputStream out = new FileOutputStream(filename)) {
             workbook.write(out);
             logger.info("Writing to a file \"{}\" successful", filename);
         } catch (IOException e) {
             logger.error("Error saving the \"{}\" file\n{}", filename, e.toString());
+            e.printStackTrace();
         }
     }
 
