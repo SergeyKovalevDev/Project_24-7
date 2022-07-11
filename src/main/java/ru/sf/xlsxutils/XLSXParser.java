@@ -24,27 +24,17 @@ import java.util.logging.Logger;
 public class XLSXParser {
 
     public static final Logger logger = Logger.getLogger(XLSXParser.class.getName());
-    private static volatile XLSXParser INSTANCE;
     private static final String[] STUDENT_HEADER_VALIDATOR = {"id университета", "ФИО", "Курс", "Средний балл"};
     private static final CellType[] STUDENT_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.NUMERIC};
-    private static final String[] UNIVERSITY_HEADER_VALIDATOR = {"id университета", "Полное название", "Аббревиатура", "Год основания", "Профиль обучения"};
-    private static final CellType[] UNIVERSITY_ROW_VALIDATOR = {CellType.STRING, CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.STRING};
+    private static final String[] UNIVERSITY_HEADER_VALIDATOR =
+            {"id университета", "Полное название", "Аббревиатура", "Год основания", "Профиль обучения"};
+    private static final CellType[] UNIVERSITY_ROW_VALIDATOR =
+            {CellType.STRING, CellType.STRING, CellType.STRING, CellType.NUMERIC, CellType.STRING};
 
     private XLSXParser() {
     }
 
-    public static XLSXParser getInstance() {
-        if (INSTANCE == null) {
-            synchronized (XLSXParser.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new XLSXParser();
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    public List<Student> getAllStudentsFromXLSX(Path filePath) throws AppException {//TODO объединить два метода в общий
+    public static List<Student> getAllStudentsFromXLSX(Path filePath) throws AppException {//TODO объединить два метода в общий
         logger.info("Parsing a file \"" + filePath.getFileName() + "\"");
         List<Student> studentList = new ArrayList<>();
         try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
@@ -86,7 +76,7 @@ public class XLSXParser {
         return studentList;
     }
 
-    public List<University> getAllUniversitiesFromXLSX(Path filePath) throws AppException {
+    public static List<University> getAllUniversitiesFromXLSX(Path filePath) throws AppException {
         logger.info("Parsing a file \"" + filePath.getFileName() + "\"");
         List<University> universityList = new ArrayList<>();
         try (InputStream stream = Files.newInputStream(filePath, StandardOpenOption.READ);
@@ -129,7 +119,7 @@ public class XLSXParser {
         return universityList;
     }
 
-    private boolean isRowValid(Row row, CellType[] validator) {
+    private static boolean isRowValid(Row row, CellType[] validator) {
         Iterator<Cell> cells = row.iterator();
         for (CellType cellType : validator) {
             if (cells.next().getCellType() != cellType) {
@@ -139,7 +129,7 @@ public class XLSXParser {
         return true;
     }
 
-    private boolean isHeaderValid(Row header, String[] validator) {
+    private static boolean isHeaderValid(Row header, String[] validator) {
         Iterator<Cell> cells = header.iterator();
         for (String cellName : validator) {
             Cell cell = cells.next();

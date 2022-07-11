@@ -42,31 +42,30 @@ public class App {
             String sourceFilename = properties.getProperty("SOURCE_FILENAME");
             Path source = Paths.get(sourceFilename);
             String destinationFilename = properties.getProperty("DESTINATION_FILENAME");
-            XLSXParser xlsxParser = XLSXParser.getInstance();
-            getStatisticalReport(source, destinationFilename, xlsxParser);
+            getStatisticalReport(source, destinationFilename);
         } catch (AppException e) {
             logger.log(Level.SEVERE, "Application error", e);
         }
     }
 
-    private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) throws AppException {
+    private static void parsingAndSortingUsingStreamApi(Path filepath) throws AppException {
         Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
         Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
 
-        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath)
+        List<Student> studentList = XLSXParser.getAllStudentsFromXLSX(filepath)
                 .stream()
                 .sorted(studentComparator)
                 .toList();
 
-        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath)
+        List<University> universityList = XLSXParser.getAllUniversitiesFromXLSX(filepath)
                 .stream()
                 .sorted(universityComparator)
                 .toList();
     }
 
-    private static void getStatisticalReport(Path sourcePath, String destFilename, XLSXParser xlsxParser) throws AppException {
-        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(sourcePath);
-        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(sourcePath);
+    private static void getStatisticalReport(Path sourcePath, String destFilename) throws AppException {
+        List<University> universityList = XLSXParser.getAllUniversitiesFromXLSX(sourcePath);
+        List<Student> studentList = XLSXParser.getAllStudentsFromXLSX(sourcePath);
         List<Statistics> statisticsList = StatisticBuilder.getStatistic(studentList, universityList);
         XLSXWriter.createWorkbook(statisticsList, destFilename);
     }
