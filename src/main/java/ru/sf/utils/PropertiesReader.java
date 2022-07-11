@@ -11,7 +11,7 @@ public class PropertiesReader {
     private PropertiesReader() {}
 
     public static Properties loadProperties(String propertiesFilename) throws AppException {
-        try (InputStream inputStream = PropertiesReader.class.getResourceAsStream("/" + propertiesFilename)) {
+        try (InputStream inputStream = PropertiesReader.class.getResourceAsStream(propertiesFilename)) {
             Properties properties = new Properties();
             properties.load(inputStream);
             return properties;

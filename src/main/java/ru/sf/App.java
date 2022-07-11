@@ -25,24 +25,24 @@ import java.util.logging.Logger;
 public class App {
     public static Properties properties;
 
+    private static final String APP_PROPERTIES_FILENAME = "/app.properties";
+    private static final String LOG_PROPERTIES_FILENAME = "/logging.properties";
+
     public static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) {
 
         try {
-            LogManager.getLogManager().readConfiguration(App.class.getResourceAsStream("/logging.properties"));
-
+            LogManager.getLogManager().readConfiguration(App.class.getResourceAsStream(LOG_PROPERTIES_FILENAME));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error loading logger properties\n" + e);
         }
 
-        String propertiesFilename = "app.properties";
         try {
-            properties = PropertiesReader.loadProperties(propertiesFilename);
-            String sourceFilename = properties.getProperty("SOURCE_FILENAME");
-            Path source = Paths.get(sourceFilename);
+            properties = PropertiesReader.loadProperties(APP_PROPERTIES_FILENAME);
+            Path sourcePath = Paths.get(properties.getProperty("SOURCE_FILENAME"));
             String destinationFilename = properties.getProperty("DESTINATION_FILENAME");
-            getStatisticalReport(source, destinationFilename);
+            getStatisticalReport(sourcePath, destinationFilename);
         } catch (AppException e) {
             logger.log(Level.SEVERE, "Application error", e);
         }
