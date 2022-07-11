@@ -1,27 +1,23 @@
 package ru.sf.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.sf.xlsxutils.XLSXParser;
+import ru.sf.exceptions.AppException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesReader {
-    private static final Logger logger = LoggerFactory.getLogger(XLSXParser.class);
 
     public PropertiesReader() {}
 
-    public Properties loadProperties(String propertiesFilename) {
+    public Properties loadProperties(String propertiesFilename) throws AppException {
         Properties properties = new Properties();
         try (InputStream inputStream = this.getClass().getResourceAsStream("/" + propertiesFilename)) {
             if (inputStream == null) throw new IOException();
             properties.load(inputStream);
+            return properties;
         } catch (IOException e) {
-            logger.error("Properties file \"{}\" not found!", propertiesFilename);
-            return null;
+            throw new AppException("Properties file \"" + propertiesFilename + "\" not found!");
         }
-        return properties;
     }
 }
