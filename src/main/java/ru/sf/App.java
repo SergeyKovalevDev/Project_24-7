@@ -1,9 +1,12 @@
 package ru.sf;
 
+import ru.sf.enums.StudentComparatorEnum;
+import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.exceptions.AppException;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
+import ru.sf.utils.ComparatorSelector;
 import ru.sf.utils.PropertiesReader;
 import ru.sf.utils.StatisticBuilder;
 import ru.sf.xlsxutils.XLSXParser;
@@ -12,6 +15,7 @@ import ru.sf.xlsxutils.XLSXWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -48,20 +52,20 @@ public class App {
         }
     }
 
-//    private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) {
-//        Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
-//        Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
-//
-//        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath)
-//                .stream()
-//                .sorted(studentComparator)
-//                .toList();
-//
-//        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath)
-//                .stream()
-//                .sorted(universityComparator)
-//                .toList();
-//    }
+    private static void parsingAndSortingUsingStreamApi(Path filepath, XLSXParser xlsxParser) throws AppException {
+        Comparator<Student> studentComparator = ComparatorSelector.getStudentComparator(StudentComparatorEnum.BY_FULL_NAME);
+        Comparator<University> universityComparator = ComparatorSelector.getUniversityComparator(UniversityComparatorEnum.BY_YEAR_OF_FOUNDATION);
+
+        List<Student> studentList = xlsxParser.getAllStudentsFromXLSX(filepath)
+                .stream()
+                .sorted(studentComparator)
+                .toList();
+
+        List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(filepath)
+                .stream()
+                .sorted(universityComparator)
+                .toList();
+    }
 
     private static void getStatisticalReport(Path sourcePath, String destFilename, XLSXParser xlsxParser) throws AppException {
         List<University> universityList = xlsxParser.getAllUniversitiesFromXLSX(sourcePath);
