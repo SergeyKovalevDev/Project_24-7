@@ -2,28 +2,25 @@ package ru.sf.xlsxutils;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ru.sf.exceptions.AppException;
 import ru.sf.models.Statistics;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class XLSXWriter { //TODO стоит ли этот класс делать синглтоном?
+public class XLSXWriter {
 
-    // Logger configuration
-    private static final Logger logger = LoggerFactory.getLogger(XLSXWriter.class.getName());
+    public static final Logger logger = Logger.getLogger(XLSXWriter.class.getName());
 
-    public static void createWorkbook(List<Statistics> statisticsList, String destFilename) {
+    public static void createWorkbook(List<Statistics> statisticsList, String destFilename) throws AppException {
 
         try (Workbook workbook = new XSSFWorkbook()) {
 
-
-            // workbook create
             String sheetName = "Статистика";
             Sheet sheet = workbook.createSheet(sheetName);
-            logger.info("Created workbook with sheet \"{}\"", sheetName);
+            logger.info("Created workbook with sheet \"" + sheetName + "\"");
 
             Font headerFont = workbook.createFont();
             headerFont.setFontName("Arial");
@@ -36,27 +33,24 @@ public class XLSXWriter { //TODO стоит ли этот класс делат�
             for (Statistics statistics : statisticsList) {
                 createContentRow(sheet, rowCount++, statistics);
             }
-            logger.info("{} rows added into sheet \"{}\"", rowCount - 1, sheetName);
+            logger.info((rowCount - 1) + " rows added into sheet \"" + sheetName + "\"");
 
             writeWorkbook(workbook, destFilename);
 
         } catch (IOException e) {
-            logger.error("Error creating a workbook\n{}", e.toString());
-            throw new RuntimeException(e);//TODO разобраться как поступить при этой ошибке
+            throw new AppException("Error creating a workbook");
         }
     }
 
-    private static void writeWorkbook(Workbook workbook, String filename) {
+    private static void writeWorkbook(Workbook workbook, String filename) throws AppException {
 
         try (FileOutputStream out = new FileOutputStream(filename)) {
             workbook.write(out);
-            logger.info("Writing to a file \"{}\" successful", filename);
+            logger.info("Writing to a file \"" + filename + "\" successful");
         } catch (IOException e) {
-            logger.error("Error saving the \"{}\" file\n{}", filename, e.toString());
-            e.printStackTrace();
+            throw new AppException("Error saving the \"" + filename + "\" file");
         }
     }
-
 
     private static void createHeaderRow(Sheet sheet, int rowNumber, CellStyle cellStyle) {
         Row row = sheet.createRow(rowNumber);
