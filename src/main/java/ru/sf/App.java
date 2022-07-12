@@ -17,7 +17,9 @@ import ru.sf.xlsxutils.XLSXParser;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -41,7 +43,10 @@ public class App {
         try {
             properties = PropertiesReader.loadProperties(APP_PROPERTIES_FILENAME);
             Path sourceFilepath = Paths.get(properties.getProperty("SOURCE_FILEPATH"));
-            Path xmlDestFilepath = Paths.get(properties.getProperty("XML_DEST_FILEPATH"));
+
+            String xmlDestFilepathPattern = properties.getProperty("XML_DEST_FILEPATH_PATTERN");
+
+            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern);
             ExportStructure structure = getStructure(sourceFilepath);
             xmlExport(structure, xmlDestFilepath);
         } catch (RuntimeException | AppException e) {
@@ -52,6 +57,14 @@ public class App {
     private static void xmlExport(ExportStructure structure, Path destFilepath) throws AppException {
         Exportable xmlExporter = new XMLExporter();
         xmlExporter.exportToFile(structure, destFilepath);
+    }
+
+    private static Path getExportFilepath(String pattern) {
+        String datePattern = pattern.substring(pattern.indexOf('{') + 1, pattern.lastIndexOf('}'));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+        String date = dateFormat.format(new Date());
+        String filepath = pattern.replaceFirst(datePattern, date);
+        return Paths.get(filepath);
     }
 
     private static ExportStructure getStructure(Path sourceFilepath) throws AppException {
