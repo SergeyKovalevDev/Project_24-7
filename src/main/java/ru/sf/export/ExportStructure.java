@@ -1,6 +1,7 @@
 package ru.sf.export;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
@@ -19,14 +20,17 @@ public class ExportStructure {
     @XmlTransient
     private final LocalDate timestamp = LocalDate.now();
 
+    @SerializedName("studentInfo")
     @XmlElementWrapper(name = "studentInfo")
     @XmlElement(name = "studentEntry")
     private List<Student> studentList;
 
+    @SerializedName("universitiesInfo")
     @XmlElementWrapper(name = "universitiesInfo")
     @XmlElement(name = "universityEntry")
     private List<University> universityList;
 
+    @SerializedName("statisticalInfo")
     @XmlElementWrapper(name = "statisticalInfo")
     @XmlElement(name = "statisticsEntry")
     private List<Statistics> statisticsList;
