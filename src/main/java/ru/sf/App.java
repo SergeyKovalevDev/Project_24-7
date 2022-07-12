@@ -27,7 +27,6 @@ public class App {
 
     private static final String APP_PROPERTIES_FILENAME = "/app.properties";
     private static final String LOG_PROPERTIES_FILENAME = "/logging.properties";
-
     public static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) {
@@ -43,7 +42,7 @@ public class App {
             Path sourcePath = Paths.get(properties.getProperty("SOURCE_FILENAME"));
             String destinationFilename = properties.getProperty("DESTINATION_FILENAME");
             getStatisticalReport(sourcePath, destinationFilename);
-        } catch (AppException e) {
+        } catch (RuntimeException | AppException e) {
             logger.log(Level.SEVERE, "Application error", e);
         }
     }
