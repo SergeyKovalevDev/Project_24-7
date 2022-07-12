@@ -1,4 +1,4 @@
-package ru.sf.exportutils;
+package ru.sf.export;
 
 import ru.sf.exceptions.AppException;
 

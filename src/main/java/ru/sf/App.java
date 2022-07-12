@@ -3,12 +3,12 @@ package ru.sf;
 import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.exceptions.AppException;
-import ru.sf.exportutils.XMLExporter;
+import ru.sf.export.JSONExporter;
+import ru.sf.export.XMLExporter;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
-import ru.sf.exportutils.Exportable;
-import ru.sf.exportutils.ExportStructure;
+import ru.sf.export.ExportStructure;
 import ru.sf.utils.ComparatorSelector;
 import ru.sf.utils.PropertiesReader;
 import ru.sf.utils.StatisticBuilder;
@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -45,25 +47,25 @@ public class App {
             Path sourceFilepath = Paths.get(properties.getProperty("SOURCE_FILEPATH"));
 
             String xmlDestFilepathPattern = properties.getProperty("XML_DEST_FILEPATH_PATTERN");
+            String jasonDestFilepathPattern = properties.getProperty("JSON_DEST_FILEPATH_PATTERN");
 
-            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern);
             ExportStructure structure = getStructure(sourceFilepath);
-            xmlExport(structure, xmlDestFilepath);
+
+            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern, LocalDate.now());
+            new XMLExporter().exportToFile(structure, xmlDestFilepath);
+
+            Path jsonDestFilepath = getExportFilepath(jasonDestFilepathPattern, structure.getTimestamp());
+            new JSONExporter().exportToFile(structure, jsonDestFilepath);
+
+
         } catch (RuntimeException | AppException e) {
             logger.log(Level.SEVERE, "Application error", e);
         }
     }
 
-    private static void xmlExport(ExportStructure structure, Path destFilepath) throws AppException {
-        Exportable xmlExporter = new XMLExporter();
-        xmlExporter.exportToFile(structure, destFilepath);
-    }
-
-    private static Path getExportFilepath(String pattern) {
+    private static Path getExportFilepath(String pattern, LocalDate creationDate) {
         String datePattern = pattern.substring(pattern.indexOf('{') + 1, pattern.lastIndexOf('}'));
-        SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-        String date = dateFormat.format(new Date());
-        String filepath = pattern.replaceFirst(datePattern, date);
+        String filepath = pattern.replaceFirst(datePattern, creationDate.format(DateTimeFormatter.ofPattern(datePattern)));
         return Paths.get(filepath);
     }
 

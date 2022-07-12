@@ -1,15 +1,18 @@
-package ru.sf.exportutils;
+package ru.sf.export;
 
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
 
 import javax.xml.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @XmlRootElement(name = "root")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExportStructure {
+
+    private final LocalDate timestamp = LocalDate.now();
 
     @XmlElementWrapper(name = "studentInfo")
     @XmlElement(name = "studentEntry")
@@ -30,5 +33,9 @@ public class ExportStructure {
         this.studentList = studentList;
         this.universityList = universityList;
         this.statisticsList = statisticsList;
+    }
+
+    public LocalDate getTimestamp() {
+        return timestamp;
     }
 }
