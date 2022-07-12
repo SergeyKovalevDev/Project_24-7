@@ -4,6 +4,8 @@ import ru.sf.enums.StudentComparatorEnum;
 import ru.sf.enums.StudyProfile;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.exceptions.AppException;
+import ru.sf.export.JSONExporter;
+import ru.sf.export.XMLExporter;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
@@ -50,13 +52,13 @@ public class App {
             String xmlDestFilepathPattern = properties.getProperty("XML_DEST_FILEPATH_PATTERN");
             String jasonDestFilepathPattern = properties.getProperty("JSON_DEST_FILEPATH_PATTERN");
 
-//            ExportStructure structure = getStructure(sourceFilepath);
-//
-//            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern, LocalDate.now());
-//            new XMLExporter().exportToFile(structure, xmlDestFilepath);
-//
-//            Path jsonDestFilepath = getExportFilepath(jasonDestFilepathPattern, structure.getTimestamp());
-//            new JSONExporter().exportToFile(structure, jsonDestFilepath);
+            ExportStructure structure = getStructure(sourceFilepath);
+
+            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern, LocalDate.now());
+            new XMLExporter().exportToFile(structure, xmlDestFilepath);
+
+            Path jsonDestFilepath = getExportFilepath(jasonDestFilepathPattern, structure.getTimestamp());
+            new JSONExporter().exportToFile(structure, jsonDestFilepath);
 
             // Additional task - GENERICS
             // Parsing model to JSON:
