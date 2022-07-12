@@ -1,27 +1,28 @@
 package ru.sf;
 
 import ru.sf.enums.StudentComparatorEnum;
+import ru.sf.enums.StudyProfile;
 import ru.sf.enums.UniversityComparatorEnum;
 import ru.sf.exceptions.AppException;
-import ru.sf.export.JSONExporter;
-import ru.sf.export.XMLExporter;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
 import ru.sf.models.University;
 import ru.sf.export.ExportStructure;
 import ru.sf.utils.ComparatorSelector;
+import ru.sf.utils.JsonUtil;
 import ru.sf.utils.PropertiesReader;
 import ru.sf.utils.StatisticBuilder;
 import ru.sf.xlsxutils.XLSXParser;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ public class App {
     private static final String LOG_PROPERTIES_FILENAME = "/logging.properties";
     public static final Logger logger = Logger.getLogger(App.class.getName());
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException {
 
         try {
             LogManager.getLogManager().readConfiguration(App.class.getResourceAsStream(LOG_PROPERTIES_FILENAME));
@@ -49,13 +50,19 @@ public class App {
             String xmlDestFilepathPattern = properties.getProperty("XML_DEST_FILEPATH_PATTERN");
             String jasonDestFilepathPattern = properties.getProperty("JSON_DEST_FILEPATH_PATTERN");
 
-            ExportStructure structure = getStructure(sourceFilepath);
+//            ExportStructure structure = getStructure(sourceFilepath);
+//
+//            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern, LocalDate.now());
+//            new XMLExporter().exportToFile(structure, xmlDestFilepath);
+//
+//            Path jsonDestFilepath = getExportFilepath(jasonDestFilepathPattern, structure.getTimestamp());
+//            new JSONExporter().exportToFile(structure, jsonDestFilepath);
 
-            Path xmlDestFilepath = getExportFilepath(xmlDestFilepathPattern, LocalDate.now());
-            new XMLExporter().exportToFile(structure, xmlDestFilepath);
-
-            Path jsonDestFilepath = getExportFilepath(jasonDestFilepathPattern, structure.getTimestamp());
-            new JSONExporter().exportToFile(structure, jsonDestFilepath);
+            // Additional task - GENERICS
+            // Parsing model to JSON:
+            modelToJsonDemo();
+            // Parsing list of models to JSON:
+            modelListToJsonDemo(sourceFilepath);
 
 
         } catch (RuntimeException | AppException e) {
@@ -87,5 +94,37 @@ public class App {
         List<Statistics> statisticsList = StatisticBuilder.getStatistic(studentList, universityList);
 
         return new ExportStructure(studentList, universityList, statisticsList);
+    }
+
+    private static void modelToJsonDemo() throws MalformedURLException {
+        University university = new University.Builder()
+                .withId("01")
+                .withFullName("abc")
+                .withShortName("ABC")
+                .withYearOfFoundation(1000)
+                .withMainProfile(StudyProfile.CHEMISTRY)
+                .withWebsite(new URL("https://abc.ru"))
+                .build();
+
+        Student student = new Student.Builder()
+                .withUniversityId("01")
+                .withFullName("abc")
+                .withCurrentCourseNumber(2)
+                .withAvgExamScore(2.5F)
+                .withDateOfBirth(LocalDate.of(1980, Month.MAY, 15))
+                .build();
+
+        System.out.println(JsonUtil.modelToJson(university));
+        System.out.println(JsonUtil.modelToJson(student));
+    }
+
+    private static void modelListToJsonDemo(Path filepath) throws AppException {
+
+        List<Student> studentList = XLSXParser.getAllStudentsFromXLSX(filepath);
+        System.out.println(JsonUtil.modelListToJson(studentList));
+
+        List<University> universityList = XLSXParser.getAllUniversitiesFromXLSX(filepath);
+        System.out.println(JsonUtil.modelToJson(universityList));
+
     }
 }
