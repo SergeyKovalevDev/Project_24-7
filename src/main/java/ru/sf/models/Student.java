@@ -7,22 +7,33 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.sf.App;
 
+import javax.xml.bind.annotation.*;
 import java.time.LocalDate;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
 @ToString
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Student {
 
     @SerializedName("ФИО студента")
+    @XmlElement(name = "studentName")
     private String fullName;
+
     @SerializedName("Код университета")
+    @XmlElement(name = "universityId")
     private String universityId;
+
     @SerializedName("Номер курса")
+    @XmlTransient
     private int currentCourseNumber;
+
     @SerializedName("Средний балл")
+    @XmlElement(name = "avgScore")
     private float avgExamScore;
+
     @SerializedName("Дата рождения")
+    @XmlTransient
     private LocalDate dateOfBirth;
 
     private Student(Builder builder) {

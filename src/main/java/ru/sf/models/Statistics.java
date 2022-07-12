@@ -6,17 +6,31 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.sf.enums.StudyProfile;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
 @ToString
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Statistics {
 
+    @XmlElement(name = "universityProfile")
     private StudyProfile mainProfile;
+
+    @XmlElement(name = "avgScore")
     private float avgExamScore;
+
+    @XmlTransient
     private long numberOfStudents;
+
+    @XmlTransient
     private long numberOfUniversities;
+
+    @XmlTransient
     private List<String> universityName;
 
     private Statistics(Builder builder) {
