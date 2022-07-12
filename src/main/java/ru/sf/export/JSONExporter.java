@@ -1,7 +1,10 @@
 package ru.sf.export;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import ru.sf.exceptions.AppException;
 import ru.sf.serializers.LocalDateSerializer;
 import ru.sf.xlsxutils.XLSXParser;
@@ -27,6 +30,17 @@ public class JSONExporter implements Exportable {
         }
         try (Writer writer = new FileWriter(String.valueOf(filePath))) {
             GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+                @Override
+                public boolean shouldSkipField(FieldAttributes f) {
+                    return f.getAnnotation(Expose.class) != null;
+                }
+
+                @Override
+                public boolean shouldSkipClass(Class<?> c) {
+                    return false;
+                }
+            });
             gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             gson.toJson(structure, writer);

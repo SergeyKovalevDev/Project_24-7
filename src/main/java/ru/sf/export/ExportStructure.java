@@ -1,5 +1,6 @@
 package ru.sf.export;
 
+import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import ru.sf.models.Statistics;
 import ru.sf.models.Student;
@@ -14,6 +15,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExportStructure {
 
+    @Expose
     @XmlTransient
     private final LocalDate timestamp = LocalDate.now();
 
